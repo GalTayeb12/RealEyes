@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>RealEyes Mini Front</title>
+  <style>
+    body { font-family: Arial; max-width: 780px; margin: 30px auto; }
+    input, button { padding: 10px; margin: 6px 0; width: 100%; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    pre { background: #f5f5f5; padding: 12px; overflow: auto; border-radius: 8px; }
+    .small { font-size: 12px; color: #555; }
+  </style>
+</head>
+<body>
+  <h2>RealEyes Mini Front (Test)</h2>
+  <div class="small">שרת: http://127.0.0.1:5000</div>
+
+  <div class="row">
+    <div>
+      <h3>Register</h3>
+      <input id="r_email" placeholder="email (e.g. test@x.com)">
+      <input id="r_pass" placeholder="password (>=8 chars)" type="password">
+      <button onclick="register()">Register</button>
+    </div>
+
+    <div>
+      <h3>Login</h3>
+      <input id="l_email" placeholder="email">
+      <input id="l_pass" placeholder="password" type="password">
+      <button onclick="login()">Login</button>
+      <div class="small">Token: <b id="tok_state">none</b></div>
+      <button onclick="clearToken()">Clear Token</button>
+    </div>
+  </div>
+
+  <h3>Upload (JWT protected)</h3>
+  <input id="file" type="file" accept=".jpg,.jpeg,.png">
+  <button onclick="upload()">Upload Image</button>
+
+  <h3>Output</h3>
+  <pre id="out"></pre>
+
+<script>
+const API = "http://127.0.0.1:5000";
+let token = localStorage.getItem("token") || "";
+document.getElementById("tok_state").innerText = token ? "saved" : "none";
+
+function log(x){ document.getElementById("out").textContent = JSON.stringify(x, null, 2); }
+
+async function register(){
+  const email = document.getElementById("r_email").value.trim();
+  const password = document.getElementById("r_pass").value;
+  const res = await fetch(API + "/api/auth/register", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({email, password})
+  });
+  let body = {};
+  try { body = await res.json(); } catch(e) { body = {raw: await res.text()}; }
+  log({endpoint:"/api/auth/register", status: res.status, body});
+}
+
+async function login(){
+  const email = document.getElementById("l_email").value.trim();
+  const password = document.getElementById("l_pass").value;
+  const res = await fetch(API + "/api/auth/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({email, password})
+  });
+  const body = await res.json();
+
+  if (res.ok && body.access_token){
+    token = body.access_token;
+    localStorage.setItem("token", token);
+    document.getElementById("tok_state").innerText = "saved";
+  }
+
+  log({endpoint:"/api/auth/login", status: res.status, body});
+}
+
+function clearToken(){
+  token = "";
+  localStorage.removeItem("token");
+  document.getElementById("tok_state").innerText = "none";
+  log({message:"token cleared"});
+}
+
+async function upload(){
+  if (!token) return log({error:"No token. Login first."});
+  const f = document.getElementById("file").files[0];
+  if (!f) return log({error:"Choose a file first."});
+
+  const form = new FormData();
+  form.append("file", f);
+
+  const res = await fetch(API + "/api/upload", {
+    method: "POST",
+    headers: {"Authorization": "Bearer " + token},
+    body: form
+  });
+
+  let body = {};
+  try { body = await res.json(); } catch(e) { body = {raw: await res.text()}; }
+  log({endpoint:"/api/upload", status: res.status, body});
+}
+</script>
+</body>
+</html>
