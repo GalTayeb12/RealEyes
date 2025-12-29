@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 from .config import Config
 from .extensions import db, migrate, jwt
@@ -12,7 +13,6 @@ def create_app():
     flask_app = Flask(__name__)
     flask_app.config.from_object(Config)
 
-    CORS(flask_app)
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
@@ -29,5 +29,10 @@ def create_app():
     @flask_app.get("/api/health")
     def health():
         return {"status": "ok"}
+
+    CORS(flask_app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://localhost:3000"]}})
+
+    from .routes.health import health_bp
+    flask_app.register_blueprint(health_bp)
 
     return flask_app
