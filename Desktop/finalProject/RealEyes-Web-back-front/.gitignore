@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# venv
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# env secrets
+backend/.env
+
+# uploads & local db
+backend/uploads/
+backend/*.db
+backend/instance/
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+
+
+# migrations cache (מותר להעלות migrations, לא צריך להתעלם מהם)
+# leave migrations tracked
