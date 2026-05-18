@@ -47,7 +47,6 @@ def login():
 
     token = create_access_token(identity=str(user.id))
     
-    # אנחנו מחזירים גם את פרטי המשתמש כדי שהפרונט יוכל להציג אותם!
     return {
         "access_token": token,
         "user": {
@@ -106,7 +105,7 @@ def check_email():
     if not email:
         return {"exists": False}, 200
     
-    # בודקים אם קיים משתמש עם המייל הזה (הופכים לאותיות קטנות ליתר ביטחון)
+    # בודקים אם קיים משתמש עם המייל הזה
     user = User.query.filter_by(email=email.strip().lower()).first()
     return {"exists": user is not None}, 200
 
@@ -140,7 +139,7 @@ def change_password():
     if not user.check_password(current_password):
         return {"error": "Current password is incorrect"}, 401
 
-    # עדכון הסיסמה החדשה (המתודה set_password כבר מבצעת Hashing)
+    # עדכון הסיסמה החדשה 
     user.set_password(new_password)
     db.session.commit()
 
@@ -182,7 +181,6 @@ def forgot_password():
             recipients=[email]
         )
         
-        # --- עיצוב ה-HTML של המייל (Inline CSS) ---
         msg.html = f"""
         <div style="background-color: #0f172a; padding: 40px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; text-align: center; border-radius: 20px;">
             <div style="margin-bottom: 20px;">
@@ -208,12 +206,12 @@ def forgot_password():
         try:
             mail.send(msg)
         except Exception as e:
-            print(f"Detailed Error: {e}") # זה ידפיס לטרמינל למה זה נכשל
+            print(f"Detailed Error: {e}") 
             return {"error": "Failed to send email."}, 500
 
     return {"message": "If an account exists, a reset link has been sent."}, 200
 
-# נתיב 2: איפוס בפועל - מקבל טוקן וסיסמה חדשה
+# איפוס בפועל - מקבל טוקן וסיסמה חדשה
 @auth_bp.post("/reset-password-final")
 def reset_password_final():
     data = request.get_json()

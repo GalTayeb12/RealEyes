@@ -24,7 +24,6 @@ const Dashboard = ({ setAuth }) => {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    // מעדכנים את התוצאה עם הנתונים
     setResult({
       scanId: res.data.scan_id,
       status: res.data.status,
@@ -32,8 +31,9 @@ const Dashboard = ({ setAuth }) => {
       isSafe: res.data.is_safe,
       vtMessage: res.data.vt_message,
       metadata: res.data.metadata,
-      confidence: res.data.confidence, // יקבל null מהשרת
-      fileHash: res.data.file_hash     // מקבל את ההאש
+      confidence: res.data.confidence, 
+      aiPrediction: res.data.ai_prediction, 
+      fileHash: res.data.file_hash 
     });
   };
 
@@ -253,20 +253,28 @@ const Dashboard = ({ setAuth }) => {
         {/* תוצאות */}
           {result && (
             <div className="results-container">
-                <div className={`result-box ${!result.isSafe ? 'fake' : 'real'}`}>
+                <div className={`result-box ${!result.isSafe ? 'fake' : (result.aiPrediction === 'FAKE' ? 'fake' : 'real')}`}>                    
                 
-                {/* כותרת */}
+ {/* כותרת */}
                 {!result.isSafe ? (
                     <h3>Warning: Malicious File</h3>
+                ) : result.aiPrediction === 'ERROR' ? (
+                    <h3 style={{ color: '#f59e0b', fontSize: '1.2rem', fontWeight: 'bold' }}>
+                        Analysis Failed
+                    </h3>
                 ) : (
-                    <h3 style={{ color: '#ef4444', textTransform: 'lowercase', fontSize: '1rem' }}>
-                        model not connected
+                    <h3 style={{ 
+                        color: result.aiPrediction === 'FAKE' ? '#ef4444' : '#22c55e', 
+                        fontSize: '1.2rem',
+                        fontWeight: 'bold'
+                    }}>
+                        {result.aiPrediction === 'FAKE' ? 'Fake Detected' : 'Image Appears Real'}
                     </h3>
                 )}
                 
                 {/* אחוזי ביטחון מה-DB */}
                 <p className="confidence-text">
-                    Confidence: {result.confidence === null ? 'NULL' : `${result.confidence}%`}
+                    Confidence: {result.confidence === null ? 'N/A' : `${result.confidence}%`}
                 </p>
 
                 {/* סטטוס וירוס טוטאל בקטן */}
@@ -310,7 +318,7 @@ const Dashboard = ({ setAuth }) => {
                             {key}:
                           </span>
                           <span style={{ 
-                            color: (value === 'Missing' || value === 'Unknown') ? '#f87171' : 'rgba(255, 255, 255, 0.9)', 
+                            color: 'rgba(255, 255, 255, 0.9)', 
                             fontWeight: '600'
                           }}>
                             {value}

@@ -6,7 +6,6 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 from geopy.geocoders import Nominatim
 
-# הגדרת המפענח עבור המיקום (Reverse Geocoding)
 geolocator = Nominatim(user_agent="RealEyes_Forensics")
 
 ALLOWED_EXT = {"jpg", "jpeg", "png"}
@@ -90,7 +89,7 @@ def get_image_metadata(file_path):
                 elif decoded == 'DateTimeOriginal' or decoded == 'DateTime':
                     metadata['Timestamp'] = str(value).strip()
                 
-                # 📍 פיענוח מיקום גאוגרפי לעיר ומדינה
+                #  פיענוח מיקום גאוגרפי לעיר ומדינה
                 elif decoded == 'GPSInfo':
                     try:
                         lat = value.get(2)
@@ -115,7 +114,7 @@ def get_image_metadata(file_path):
         if metadata['Software'] == 'Missing' and img.info.get('software'):
             metadata['Software'] = str(img.info['software'])
 
-        # 📱 הפיכת גרסה מספרית לקידומת iOS מובנת
+        #  הפיכת גרסה מספרית לקידומת iOS מובנת
         soft = metadata['Software']
         model = metadata['Model']
         if soft != 'Missing':

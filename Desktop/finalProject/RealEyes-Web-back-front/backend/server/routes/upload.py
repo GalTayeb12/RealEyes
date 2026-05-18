@@ -5,6 +5,7 @@ from ..extensions import db
 from ..models import ScanLog
 from ..utils import allowed_filename, safe_save, calculate_file_hash, check_virustotal, get_image_metadata
 from datetime import timedelta
+from ..ml_service import predict_image
 
 upload_bp = Blueprint("upload", __name__)
 
@@ -34,13 +35,18 @@ def upload_image():
     if is_safe:
         new_name, path = safe_save(f, upload_dir)
         size = os.path.getsize(path)
-        status_val = "received"
-        # חילוץ מטא-דאטה
+        status_val = "scanned"
+        
         metadata = get_image_metadata(path)
+        
+        # קריאה למודל 
+        ai_result, ai_confidence = predict_image(path)
     else:
         new_name = "BLOCKED"
         size = 0
         status_val = "blocked_malicious"
+        ai_result = None
+        ai_confidence = None
 
     log = ScanLog(
         user_id=int(user_id),
@@ -51,7 +57,9 @@ def upload_image():
         mimetype=f.mimetype,
         status=status_val,
         file_hash=file_hash,
-        vt_message=vt_message
+        vt_message=vt_message,
+        result=ai_result,           
+        confidence=ai_confidence    
     )
     db.session.add(log)
     db.session.commit()
@@ -63,7 +71,8 @@ def upload_image():
         "is_safe": is_safe,
         "vt_message": vt_message,
         "metadata": metadata,
-        "confidence": log.confidence,
+        "ai_prediction": ai_result,   
+        "confidence": ai_confidence, 
         "file_hash": file_hash 
     }, 201
 
@@ -77,7 +86,7 @@ def get_history():
         for scan in scans:
             is_malicious = (scan.status == "blocked_malicious")
             
-            # --- התיקון כאן: הוספת 3 שעות לזמן ישראל ---
+            #  הוספת 3 שעות לזמן ישראל 
             # בודקים שהתאריך קיים, מוסיפים 3 שעות, ואז מפרמטים לטקסט
             local_time = scan.created_at + timedelta(hours=3) if scan.created_at else None
             display_date = local_time.strftime("%d/%m/%Y %H:%M") if local_time else "N/A"

@@ -11,9 +11,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
-    MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH_MB", "8")) * 1024 * 1024
-    
-    # המשתנה החדש של וירוס טוטאל
+    MAX_CONTENT_LENGTH = None 
+
     VIRUSTOTAL_API_KEY = os.getenv("VIRUSTOTAL_API_KEY")
 
     MAIL_SERVER = 'smtp.gmail.com'
