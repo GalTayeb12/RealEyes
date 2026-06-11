@@ -15,6 +15,9 @@ const Dashboard = ({ setAuth }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [result, setResult] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [heatmapUrl, setHeatmapUrl] = useState(null);
+  const [isHeatmapLoading, setIsHeatmapLoading] = useState(false);
+  const [showHeatmapModal, setShowHeatmapModal] = useState(false);
 
   const uploadToServer = async (file) => {
     const fd = new FormData();
@@ -76,6 +79,8 @@ const Dashboard = ({ setAuth }) => {
     setPreview(null);
     setSelectedFile(null);
     setResult(null);
+    setHeatmapUrl(null);
+    setShowHeatmapModal(false);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -89,6 +94,34 @@ const Dashboard = ({ setAuth }) => {
   if (showProfile) {
     return <Profile setAuth={setAuth} onBack={() => setShowProfile(false)} />;
   }
+
+  const handleViewHeatmap = async () => {
+    if (!result?.scanId) return;
+
+    try {
+      setIsHeatmapLoading(true);
+
+      // אם כבר נוצר Heatmap קודם, לא צריך לבקש שוב מהשרת
+      if (heatmapUrl) {
+        setShowHeatmapModal(true);
+        return;
+      }
+
+      const res = await api.get(`/upload/heatmap/${result.scanId}`, {
+        responseType: "blob",
+      });
+
+      const imageUrl = URL.createObjectURL(res.data);
+      setHeatmapUrl(imageUrl);
+      setShowHeatmapModal(true);
+
+      toast.success("Heatmap generated successfully!");
+    } catch (err) {
+      toast.error(err?.response?.data?.error || "Failed to generate heatmap");
+    } finally {
+      setIsHeatmapLoading(false);
+    }
+  };
 
   return (
     <div className="dashboard">
@@ -153,6 +186,59 @@ const Dashboard = ({ setAuth }) => {
         </div>
       )}
 
+      {showHeatmapModal && heatmapUrl && (
+        <div className="heatmap-overlay" onClick={() => setShowHeatmapModal(false)}>
+          <div className="heatmap-modal fade-up" onClick={(e) => e.stopPropagation()}>
+            
+            <div className="heatmap-modal-header">
+              <div className="heatmap-title-group">
+                <h3>Model Heatmap</h3>
+                <p>
+                  The highlighted regions show which areas most influenced the model’s decision.
+                </p>
+              </div>
+
+              <button
+                className="close-heatmap-btn"
+                onClick={() => setShowHeatmapModal(false)}
+                aria-label="Close heatmap"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <div className="heatmap-modal-body">
+              <img
+                src={heatmapUrl}
+                alt="Model heatmap"
+                className="heatmap-image"
+              />
+            </div>
+
+            <div className="heatmap-legend">
+              <div className="heatmap-legend-bar"></div>
+
+              <div className="heatmap-legend-labels">
+                <span>Low influence</span>
+                <span>Medium</span>
+                <span>High influence</span>
+              </div>
+
+              <div className="heatmap-legend-notes">
+                <div className="legend-note">
+                  <span className="legend-dot blue"></span>
+                  <span>Cool colors = weaker influence</span>
+                </div>
+                <div className="legend-note">
+                  <span className="legend-dot red"></span>
+                  <span>Warm colors = stronger influence</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ===== TOP BAR ===== */}
       <header className="topbar">
         <div className="logo">
@@ -193,7 +279,44 @@ const Dashboard = ({ setAuth }) => {
         Deepfake Image Detection System
         </p>
 
-        <div className={`upload-card ${preview ? 'expanded' : ''}`}>
+        <div 
+          className={`upload-card ${preview ? 'expanded' : ''}`}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={async (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files?.[0];
+            if (!file || !file.type.startsWith('image/')) return;
+
+            setShowMenu(false);
+            setResult(null);
+            setSelectedFile(file);
+
+            // תצוגה מקדימה של התמונה הנגררת
+            const reader = new FileReader();
+            reader.onload = () => setPreview(reader.result);
+            reader.readAsDataURL(file);
+
+            // הפעלת ההעלאה לשרת
+            const uploadPromise = uploadToServer(file);
+
+            toast.promise(uploadPromise, {
+              loading: 'Uploading and analyzing image...',
+              success: 'Analysis complete!',
+              error: (err) => err?.response?.data?.error || 'Error uploading image'
+            });
+
+            try {
+              setIsUploading(true);
+              await uploadPromise;
+            } catch (err) {
+              setPreview(null);
+              setSelectedFile(null);
+              if (inputRef.current) inputRef.current.value = "";
+            } finally {
+              setIsUploading(false);
+            }
+          }}
+        >
 
           {/* אזור תמונה */}
           <div className={`image-area ${result ? 'shrink' : ''}`}>    
@@ -240,6 +363,7 @@ const Dashboard = ({ setAuth }) => {
                     <button className="secondary-btn">Download Report</button>
                     <button className="secondary-btn">View Heatmap</button>
                 </div>
+                
                 </div> */}
 
                 {/* כפתור העלאה מחדש - קטן ומתחת לתוצאות */}
@@ -329,9 +453,13 @@ const Dashboard = ({ setAuth }) => {
                   </div>
                 )}
                 <div className="result-actions">
-                    <button className="secondary-btn" disabled={!result.isSafe}>
-                        View Heatmap
-                    </button>
+                <button 
+                  className="secondary-btn" 
+                  disabled={!result.isSafe || result.aiPrediction === 'ERROR' || isHeatmapLoading}
+                  onClick={handleViewHeatmap}
+                >
+                  {isHeatmapLoading ? 'Generating...' : 'View Heatmap'}
+                </button>
                 </div>
                 </div>
                 <button className="reupload-link" onClick={handleReset}>

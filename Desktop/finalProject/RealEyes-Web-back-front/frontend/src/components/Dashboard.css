@@ -527,3 +527,314 @@
   background: rgba(167, 139, 250, 0.2); 
   border-radius: 10px; 
 }
+
+/* =========================================
+   MOBILE SCREEN LOCK - NO SCROLLING EFFECT
+   ========================================= */
+@media screen and (max-width: 768px) {
+  /* 🔒 נעילת המסך - מונע גלילה לחלוטין */
+  .dashboard {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content {
+    height: calc(100vh - 64px);
+    padding: 0.8rem 1rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+
+  /* כותרות סופר-קומפקטיות */
+  .title {
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .subtitle {
+    font-size: 0.75rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* כרטיסיית העלאה דינמית - מתאימה את עצמה לגובה הזמין */
+  .upload-card, 
+  .upload-card.expanded {
+    height: auto;
+    max-height: calc(100vh - 180px);
+    padding: 1rem;
+    gap: 0.6rem;
+    flex-shrink: 1;
+    overflow: hidden;
+  }
+
+  /* 🔎 אזור התמונה בזמן ההעלאה / טעינה */
+  .image-area {
+    height: 140px;
+  }
+  .image-preview {
+    max-height: 140px;
+  }
+
+  /* ⚡ כיווץ אגרסיבי של התמונה כשיש תוצאות */
+  .image-area.shrink {
+    height: 50px;
+    margin-bottom: 0;
+  }
+  .image-area.shrink .image-preview {
+    max-height: 50px;
+  }
+
+  /* ביטול מרווחים שליליים וצמצום רווחים */
+  .results-container {
+    margin-top: 0;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .result-box {
+    padding: 0.5rem;
+  }
+
+  .result-box h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .confidence-text, 
+  .vt-status {
+    font-size: 0.7rem;
+    margin: 0.2rem 0;
+  }
+
+  /* 📊 כיווץ בלוק ה-Metadata המרכזי כדי שלא יחרוג מהמסך */
+  .results-container div[style*="background"] {
+    margin-top: 0.4rem !important;
+    padding: 0.5rem 0.8rem !important;
+    border-radius: 8px !important;
+  }
+
+  .results-container div[style*="background"] p {
+    margin-bottom: 0.3rem !important;
+    font-size: 0.65rem !important;
+  }
+
+  .results-container div[style*="gridTemplateColumns"] {
+    gap: 4px 12px !important;
+  }
+
+  .results-container div[style*="display: flex"] {
+    font-size: 0.65rem !important;
+    padding: 2px 0 !important;
+  }
+
+  /* התאמת כפתורי פעולה */
+  .result-actions {
+    margin-top: 0.4rem;
+    gap: 0.5rem;
+  }
+
+  .secondary-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  .reupload-link {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  /* התאמת הבר העליון (Topbar) */
+  .topbar {
+    height: 50px;
+    padding: 0 1rem;
+  }
+  .logo-text {
+    font-size: 1.1rem;
+  }
+  .profile-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .info-floating-btn {
+    bottom: 15px;
+    left: 15px;
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* ===== HEATMAP MODAL ===== */
+.heatmap-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 1rem;
+}
+
+.heatmap-modal {
+  width: min(90vw, 455px);
+  max-height: 86vh;
+  background: linear-gradient(180deg, rgba(30,41,59,0.98), rgba(17,24,39,0.98));
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* Header */
+.heatmap-modal-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.heatmap-title-group {
+  width: 100%;
+  padding: 0 42px;
+}
+
+.heatmap-title-group h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(135deg, #818cf8, #c084fc, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heatmap-title-group p {
+  margin: 0.35rem auto 0;
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.4;
+  max-width: 340px;
+  text-align: center;
+}
+
+/* X Button */
+.close-heatmap-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 11px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.72);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+}
+
+.close-heatmap-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Image Area */
+.heatmap-modal-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.38);
+  border-radius: 18px;
+  padding: 0.7rem;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.heatmap-image {
+  width: 100%;
+  max-width: 330px;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 15px;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.32);
+}
+
+/* Legend */
+.heatmap-legend {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.heatmap-legend-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb 0%, #22c55e 45%, #facc15 70%, #ef4444 100%);
+  margin-bottom: 0.4rem;
+}
+
+.heatmap-legend-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.66rem;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 0.55rem;
+}
+
+.heatmap-legend-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.legend-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.82);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.legend-dot.blue {
+  background: #2563eb;
+}
+
+.legend-dot.red {
+  background: #ef4444;
+}
+
+/* Footer */
+.heatmap-modal-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.heatmap-modal-footer .secondary-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+}

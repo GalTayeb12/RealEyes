@@ -1,10 +1,12 @@
 import os
+import uuid
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.applications.efficientnet import preprocess_input
 from tensorflow.keras.layers import Input, GlobalAveragePooling2D, Dropout, Dense
 from tensorflow.keras.models import Model
+from .heatmap_utils import generate_efficientnet_heatmap
 
 _model = None
 
@@ -70,3 +72,30 @@ def predict_image(image_path):
     except Exception as e:
         print(f"Error during prediction: {e}")
         return "ERROR", 0.0
+    
+def generate_heatmap(image_path):
+    model = load_deepfake_model()
+
+    if model is None:
+        return None
+
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        heatmap_dir = os.path.join(current_dir, "generated_heatmaps")
+        os.makedirs(heatmap_dir, exist_ok=True)
+
+        heatmap_filename = f"heatmap_{uuid.uuid4().hex}.png"
+        output_path = os.path.join(heatmap_dir, heatmap_filename)
+
+        generate_efficientnet_heatmap(
+            image_path=image_path,
+            model=model,
+            output_path=output_path
+        )
+
+        return output_path
+
+    except Exception as e:
+        print(f"Error generating heatmap: {e}")
+        return None

@@ -1,11 +1,11 @@
 import os
-from flask import Blueprint, current_app, request
+from flask import Blueprint, current_app, request, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..extensions import db
 from ..models import ScanLog
 from ..utils import allowed_filename, safe_save, calculate_file_hash, check_virustotal, get_image_metadata
 from datetime import timedelta
-from ..ml_service import predict_image
+from ..ml_service import predict_image, generate_heatmap
 
 upload_bp = Blueprint("upload", __name__)
 
@@ -104,3 +104,32 @@ def get_history():
     except Exception as e:
         print(f"ERROR in get_history: {e}")
         return {"error": str(e)}, 500
+    
+@upload_bp.get("/heatmap/<int:scan_id>")
+@jwt_required()
+def get_heatmap(scan_id):
+    user_id = int(get_jwt_identity())
+
+    scan = ScanLog.query.filter_by(id=scan_id, user_id=user_id).first()
+
+    if not scan:
+        return {"error": "scan not found"}, 404
+
+    if scan.status != "scanned":
+        return {"error": "heatmap is available only for safe scanned images"}, 400
+
+    if not scan.filename or scan.filename == "BLOCKED":
+        return {"error": "original image not found"}, 404
+
+    upload_dir = current_app.config["UPLOAD_DIR"]
+    image_path = os.path.join(upload_dir, scan.filename)
+
+    if not os.path.exists(image_path):
+        return {"error": "image file does not exist on server"}, 404
+
+    heatmap_path = generate_heatmap(image_path)
+
+    if not heatmap_path:
+        return {"error": "failed to generate heatmap"}, 500
+
+    return send_file(heatmap_path, mimetype="image/png")
