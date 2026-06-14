@@ -71,7 +71,7 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
-  padding: 1.75rem 2.5rem; /* היה 2rem 3rem */
+  padding: 1.75rem 2.5rem; 
   width: 100%;
   max-width: 440px;
   box-shadow: 
@@ -141,7 +141,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  position: relative; /* חובה כדי למקם את השגיאה ביחס לשדה */
+  position: relative; 
 }
 
 .form-group label {
@@ -150,7 +150,7 @@
   color: rgba(255, 255, 255, 0.9);
   text-align: left;
   padding-left: 0.75rem; 
-  margin-bottom: -0.2rem;  /* 👈 הוסיפי את השורה הזו */
+  margin-bottom: -0.2rem;  
 }
 
 .input-wrapper {
@@ -266,7 +266,6 @@
   }
 }
 
-/* Divider */
 .divider {
   display: flex;
   align-items: center;
@@ -287,7 +286,6 @@
   padding: 0 1rem;
 }
 
-/* Google Button */
 .btn-google {
   width: 100%;
   padding: 0.95rem 2rem;
@@ -347,13 +345,11 @@
   text-decoration: underline;
 }
 
-
 .google-wrapper {
   margin-top: 0.5rem;
   border-radius: 12px;
   overflow: hidden;
 }
-
 
 .btn-google-custom {
   width: 100%;
@@ -387,15 +383,15 @@
   flex: 1;
   overflow-y: auto;
   padding-right: 0.5rem;
-  overflow: hidden; /* ברירת מחדל – אין גלילה */
+  overflow: hidden; 
 }
 
 .signup-scroll {
-  max-height: 360px;   /* אפשר לשחק עם הערך */
+  max-height: 360px; 
   overflow-y: auto;
-  padding-right: 0.25rem; /* מרווח קטן מה-scroll */
+  padding-right: 0.25rem; 
 }
-/* עיצוב עדין ל-scrollbar (Chrome/Edge) */
+
 .signup-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -413,7 +409,6 @@
   background: rgba(255, 255, 255, 0.35);
 }
 
-/* Scrollbar עדין */
 .auth-form-wrapper::-webkit-scrollbar {
   width: 6px;
 }
@@ -426,7 +421,7 @@
 .auth-form-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
-/* ===== LOGIN MODE – קומפקטי ===== */
+
 .login-mode .auth-header {
   margin-bottom: 1rem;
 }
@@ -446,7 +441,7 @@
 
 .field-error {
   position: absolute;
-  top: calc(100% + 4px); /* דבוק ישירות לתחתית תיבת הקלט */
+  top: calc(100% + 4px); 
   left: 0.5rem;
   color: #ef4444;
   font-size: 0.75rem;
@@ -461,7 +456,6 @@
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important;
 }
 
-/* Password Requirements Box */
 .password-requirements {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -487,15 +481,15 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5); /* הטקסט תמיד אפור לבקשתך */
+  color: rgba(255, 255, 255, 0.5); 
 }
 
 .req-met {
-  color: #10b981; /* הכל ירוק (גם טקסט וגם וי) */
+  color: #10b981; 
 }
 
 .req-unmet {
-  color: #ef4444; /* הכל אדום (גם טקסט וגם איקס) */
+  color: #ef4444; 
 }
 
 .terms-container {
@@ -512,7 +506,7 @@
 }
 
 .checkbox-wrapper input {
-  display: none; /* מחביאים את המקורי */
+  display: none; 
 }
 
 .checkbox-custom {
@@ -544,7 +538,6 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* Terms Modal */
 .terms-modal {
   background: #1e293b;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -576,6 +569,5 @@
   line-height: 1.6;
 }
 
-/* Scrollbar לעיצוב התקנון */
 .terms-content::-webkit-scrollbar { width: 5px; }
 .terms-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }

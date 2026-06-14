@@ -1,4 +1,3 @@
-/* ===== BASE ===== */
 .dashboard {
   height: 100vh;
   overflow: hidden;
@@ -10,7 +9,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* ===== TOP BAR ===== */
 .topbar {
   height: 64px;
   padding: 0 2rem;
@@ -47,7 +45,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* ===== PROFILE ===== */
 .profile {
   position: relative;
 }
@@ -76,7 +73,6 @@
   gap: 0.2rem;
 }
 
-
 .profile-menu button {
   background: none;
   border: none;
@@ -97,8 +93,7 @@
   max-width: 760px;
   margin: 0 auto;
   padding: 1.5rem 1rem;
-
-  height: calc(100vh - 64px); /* גובה המסך פחות ה־topbar */
+  height: calc(100vh - 64px); 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -130,12 +125,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-
-  align-items: center;  /* <--- הוספתי את השורה הזו */
-  /* 🔑 אין גלילה פנימית ואין גדילה */
+  align-items: center;  
   flex-shrink: 0;
 }
-
 
 .upload-btn,
 .analyze-btn {
@@ -158,7 +150,6 @@
   transform: translateY(-2px);
 }
 
-/* ===== IMAGE PREVIEW ===== */
 .image-preview {
   max-width: 100%;
   max-height: 320px;
@@ -167,7 +158,6 @@
   box-shadow: 0 20px 60px rgba(0,0,0,0.45);
 }
 
-/* ===== MAIN CONTENT ===== */
 .content {
   max-width: 760px;
   margin: 1.5rem auto 0;
@@ -180,17 +170,14 @@
   justify-content: flex-start;
 }
 
-
-/* ===== IMAGE AREA ===== */
 .image-area {
   height: 260px;            
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.4s ease; /* אנימציה חלקה להקטנה */
+  transition: all 0.4s ease; 
 }
 
-/* כשהתוצאות מוצגות - התמונה מתכווצת */
 .image-area.shrink {
     height: 50px; 
 }
@@ -200,10 +187,9 @@
   max-width: 100%;
   object-fit: contain;
   border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* צל עדין יותר */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
 }
 
-/* קונטיינר עוטף לתוצאות כדי למרכז הכל */
 .results-container {
     display: flex;
     flex-direction: column;
@@ -215,13 +201,13 @@
 }
 
 .result-box {
-  width: 100%;            /* מתאים את עצמו לגודל כרטיס האב */
-  max-width: 450px;       /* לא נותן לו להיות רחב מדי */
-  padding: 0.8rem;        /* הקטנת הריפוד הפנימי ל-0.8rem מ-1rem */
+  width: 100%;        
+  max-width: 450px;  
+  padding: 0.8rem;   
   border-radius: 12px;
   font-size: 0.5rem;
   text-align: center;
-  box-sizing: border-box; /* שומר שהתוכן לא יפרוץ את גבולות התיבה */
+  box-sizing: border-box; 
 }
 
 .result-box.real {
@@ -251,7 +237,7 @@
   margin: 0.5rem 0;
   line-height: 1.4;
 }
-/* ===== RESULT ACTIONS ===== */
+
 .result-actions {
   margin-top: 1rem;
   display: flex;
@@ -290,12 +276,12 @@
     transition: color 0.2s;
     margin-top: 5px;
 }
+
 .reupload-link:hover {
     color: white;
     text-decoration: underline;
 }
 
-/* אנימציית כניסה */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -312,7 +298,7 @@
 
 .spinner-icon {
     animation: spin 1s linear infinite;
-    color: #ec4899; /* צבע ורוד-סגול שמתאים ללוגו שלך */
+    color: #ec4899; 
 }
 
 @keyframes spin {
@@ -324,11 +310,10 @@
     }
 }
 
-/* ===== FORENSIC METADATA ===== */
 .metadata-section {
   margin-top: 1rem;
   padding: 0.8rem;
-  background: rgba(15, 23, 42, 0.4); /* רקע כהה לשקיפות */
+  background: rgba(15, 23, 42, 0.4); 
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   text-align: left;
@@ -337,7 +322,7 @@
 .metadata-header {
   font-size: 0.75rem;
   font-weight: bold;
-  color: #a78bfa; /* סגול בהיר */
+  color: #a78bfa; 
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
@@ -347,8 +332,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  max-height: 120px; /* הגבלת גובה כדי שלא יתפוס את כל המסך */
-  overflow-y: auto;  /* גלילה פנימית אם יש הרבה מידע */
+  max-height: 120px; 
+  overflow-y: auto; 
   padding-right: 5px;
 }
 
@@ -373,7 +358,6 @@
   text-overflow: ellipsis;
 }
 
-/* עיצוב סקרולר עדין למטא-דאטה */
 .metadata-grid::-webkit-scrollbar {
   width: 3px;
 }
@@ -382,11 +366,10 @@
   border-radius: 10px;
 }
 
-/* ===== INFO FLOATING BUTTON ===== */
 .info-floating-btn {
   position: fixed;
   bottom: 30px;
-  left: 30px; /* בצד השני מהנגישות */
+  left: 30px; 
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -406,7 +389,6 @@
   transform: scale(1.1) rotate(5deg);
 }
 
-/* ===== INFO MODAL ===== */
 .info-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -470,7 +452,7 @@
   color: rgba(255,255,255,0.7);
   line-height: 1.5;
 }
-/* ===== METADATA GUIDE LIST ===== */
+
 .metadata-guide-list {
   margin: 0.8rem 0 0 0;
   padding-left: 1.2rem;
@@ -480,10 +462,9 @@
   gap: 0.8rem;
 }
 
-/* ===== COMPACT METADATA GUIDE GRID ===== */
 .metadata-guide-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* שני טורים */
+  grid-template-columns: 1fr 1fr; 
   gap: 12px;
   background: rgba(0, 0, 0, 0.2);
   padding: 1rem;
@@ -509,30 +490,24 @@
   line-height: 1.3;
 }
 
-/* הגבלת גובה למודאל למניעת חריגה */
 .info-modal {
-  max-height: 85vh; /* מקסימום 85% מגובה המסך */
+  max-height: 85vh; 
   display: flex;
   flex-direction: column;
 }
 
 .info-modal-body {
-  overflow-y: auto; /* מאפשר גלילה בתוך גוף המודאל אם צריך */
+  overflow-y: auto; 
   padding-right: 8px;
 }
 
-/* סקרולר דק למודאל */
 .info-modal-body::-webkit-scrollbar { width: 4px; }
 .info-modal-body::-webkit-scrollbar-thumb { 
   background: rgba(167, 139, 250, 0.2); 
   border-radius: 10px; 
 }
 
-/* =========================================
-   MOBILE SCREEN LOCK - NO SCROLLING EFFECT
-   ========================================= */
 @media screen and (max-width: 768px) {
-  /* 🔒 נעילת המסך - מונע גלילה לחלוטין */
   .dashboard {
     height: 100vh;
     overflow: hidden;
@@ -550,7 +525,6 @@
     overflow: hidden;
   }
 
-  /* כותרות סופר-קומפקטיות */
   .title {
     font-size: 1.3rem;
     margin-bottom: 0.2rem;
@@ -561,7 +535,6 @@
     margin-bottom: 0.8rem;
   }
 
-  /* כרטיסיית העלאה דינמית - מתאימה את עצמה לגובה הזמין */
   .upload-card, 
   .upload-card.expanded {
     height: auto;
@@ -572,7 +545,6 @@
     overflow: hidden;
   }
 
-  /* 🔎 אזור התמונה בזמן ההעלאה / טעינה */
   .image-area {
     height: 140px;
   }
@@ -580,7 +552,6 @@
     max-height: 140px;
   }
 
-  /* ⚡ כיווץ אגרסיבי של התמונה כשיש תוצאות */
   .image-area.shrink {
     height: 50px;
     margin-bottom: 0;
@@ -589,7 +560,6 @@
     max-height: 50px;
   }
 
-  /* ביטול מרווחים שליליים וצמצום רווחים */
   .results-container {
     margin-top: 0;
     gap: 0.4rem;
@@ -611,7 +581,6 @@
     margin: 0.2rem 0;
   }
 
-  /* 📊 כיווץ בלוק ה-Metadata המרכזי כדי שלא יחרוג מהמסך */
   .results-container div[style*="background"] {
     margin-top: 0.4rem !important;
     padding: 0.5rem 0.8rem !important;
@@ -632,7 +601,6 @@
     padding: 2px 0 !important;
   }
 
-  /* התאמת כפתורי פעולה */
   .result-actions {
     margin-top: 0.4rem;
     gap: 0.5rem;
@@ -648,7 +616,6 @@
     margin-top: 2px;
   }
 
-  /* התאמת הבר העליון (Topbar) */
   .topbar {
     height: 50px;
     padding: 0 1rem;
@@ -668,7 +635,6 @@
   }
 }
 
-/* ===== HEATMAP MODAL ===== */
 .heatmap-overlay {
   position: fixed;
   inset: 0;
@@ -694,7 +660,6 @@
   animation: fadeIn 0.25s ease-out;
 }
 
-/* Header */
 .heatmap-modal-header {
   position: relative;
   display: flex;
@@ -728,7 +693,6 @@
   text-align: center;
 }
 
-/* X Button */
 .close-heatmap-btn {
   position: absolute;
   top: 0;
@@ -751,7 +715,6 @@
   color: #ef4444;
 }
 
-/* Image Area */
 .heatmap-modal-body {
   display: flex;
   justify-content: center;
@@ -771,7 +734,6 @@
   box-shadow: 0 14px 34px rgba(0,0,0,0.32);
 }
 
-/* Legend */
 .heatmap-legend {
   margin-top: 0.75rem;
   padding: 0.7rem 0.8rem;
@@ -827,7 +789,6 @@
   background: #ef4444;
 }
 
-/* Footer */
 .heatmap-modal-footer {
   display: flex;
   justify-content: center;

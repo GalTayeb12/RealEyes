@@ -33,7 +33,6 @@ function Register({ setAuth }) {
 
     setLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       setAuth(true);
       navigate('/dashboard');

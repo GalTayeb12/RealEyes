@@ -27,7 +27,6 @@ def register():
     if username and User.query.filter_by(username=username).first():
         return {"error": "username already exists"}, 409
 
-    # שמירת כל הנתונים במסד
     user = User(email=email, full_name=name, username=username)
     user.set_password(password)
     db.session.add(user)
@@ -77,16 +76,13 @@ def google_auth():
         
     user = User.query.filter_by(email=email).first()
     
-    # אם זה משתמש חדש מגוגל, ניצור לו חשבון אוטומטית במערכת שלנו
     if not user:
         username = email.split('@')[0]
         user = User(email=email, full_name=name, username=username, is_google_user=True)
-        # שמים סיסמה פיקטיבית אקראית כי הוא מתחבר דרך גוגל
         user.set_password("google_sso_" + email)
         db.session.add(user)
         db.session.commit()
         
-    # מייצרים טוקן אמיתי של השרת שלך כדי שהוא יוכל לסרוק תמונות
     token = create_access_token(identity=str(user.id))
     
     return {
@@ -105,7 +101,6 @@ def check_email():
     if not email:
         return {"exists": False}, 200
     
-    # בודקים אם קיים משתמש עם המייל הזה
     user = User.query.filter_by(email=email.strip().lower()).first()
     return {"exists": user is not None}, 200
 
@@ -128,18 +123,15 @@ def change_password():
     if len(new_password) < 8:
         return {"error": "New password must be at least 8 characters"}, 400
 
-    # שליפת המשתמש המחובר מהמסד
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
 
     if not user:
         return {"error": "User not found"}, 404
 
-    # בדיקה שהסיסמה הישנה נכונה
     if not user.check_password(current_password):
         return {"error": "Current password is incorrect"}, 401
 
-    # עדכון הסיסמה החדשה 
     user.set_password(new_password)
     db.session.commit()
 
@@ -157,7 +149,6 @@ def verify_password():
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
     
-    # מחזירים True אם הסיסמה נכונה, אחרת False
     is_valid = user.check_password(password)
     return {"valid": is_valid}, 200
 
@@ -211,7 +202,6 @@ def forgot_password():
 
     return {"message": "If an account exists, a reset link has been sent."}, 200
 
-# איפוס בפועל - מקבל טוקן וסיסמה חדשה
 @auth_bp.post("/reset-password-final")
 def reset_password_final():
     data = request.get_json()
@@ -219,7 +209,6 @@ def reset_password_final():
     new_password = data.get("password")
 
     try:
-        # אימות הטוקן
         identity = decode_token(token)['sub']
         user = User.query.get(int(identity))
         

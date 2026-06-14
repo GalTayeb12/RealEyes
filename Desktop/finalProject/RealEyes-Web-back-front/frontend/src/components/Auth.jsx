@@ -35,7 +35,6 @@ const Auth = ({ setAuth }) => {
     special: /[^A-Za-z0-9]/.test(formData.password)
   };
 
-  /* 🛡️ VALIDATION LOGIC */
   const validateField = (name, value, currentFormData = formData) => {
     if (!value) return "This field is required";
 
@@ -84,8 +83,6 @@ const Auth = ({ setAuth }) => {
     }
   };
 
-  /* 👆 HANDLE BLUR + DATABASE CHECK */
-/* 👆 HANDLE BLUR + DATABASE CHECK */
   const handleBlur = async (e) => {
     const { name, value } = e.target;
     setTouched(prev => ({ ...prev, [name]: true }));
@@ -93,7 +90,6 @@ const Auth = ({ setAuth }) => {
     const localError = validateField(name, value);
     setErrors(prev => ({ ...prev, [name]: localError }));
 
-    // בדיקה בשרת האם שם המשתמש כבר תפוס
     if (name === "username" && !localError && !isLogin) {
         try {
             const res = await api.get(`/auth/check-username?username=${value}`);
@@ -105,7 +101,6 @@ const Auth = ({ setAuth }) => {
         }
     }
 
-    // בדיקה בשרת האם המייל כבר תפוס (חדש!)
     if (name === "email" && !localError && !isLogin) {
         try {
             const res = await api.get(`/auth/check-email?email=${value}`);
@@ -122,7 +117,6 @@ const handleForgotSubmit = async (e) => {
   e.preventDefault();
   setLoading(true);
   try {
-    // השרת יבדוק אם המייל קיים וישלח לינק לאיפוס
     await api.post("/auth/forgot-password", { email: formData.email });
     toast.success("If an account exists, a reset link has been sent!");
     setShowForgot(false);
@@ -133,7 +127,6 @@ const handleForgotSubmit = async (e) => {
   }
 };
 
-  /* 📩 SUBMIT */
 const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -152,7 +145,6 @@ const handleSubmit = async (e) => {
       }
     });
 
-    // אם אנחנו בהרשמה ויש כבר שגיאה מהשרת, לא נדרוס אותה
     if (!isLogin) {
         if (errors.username === "This username is already taken") {
             newErrors.username = errors.username;
@@ -230,23 +222,19 @@ const handleSubmit = async (e) => {
     }
   };
 
-  /* 🔐 GOOGLE LOGIN */
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        // 1. שולפים את המידע האמיתי מהשרתים של גוגל בעזרת הטוקן שגוגל נתן לנו
         const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
         });
         const userInfo = await userInfoRes.json();
 
-        // 2. שולחים את המידע ל-Backend שלנו כדי שייצור משתמש (אם לא קיים) ויחזיר טוקן של המערכת שלנו
         const res = await api.post("/auth/google", {
             email: userInfo.email,
             name: userInfo.name
         });
 
-        // 3. שומרים בזיכרון את הטוקן ואת השם מהשרת שלנו
         localStorage.setItem("access_token", res.data.access_token);
         localStorage.setItem("currentUser", JSON.stringify(res.data.user));
 
@@ -315,7 +303,6 @@ const handleSubmit = async (e) => {
 
 return (
     <div className="auth-container">
-      {/* רקע עם האפקטים הויזואליים */}
       <div className="auth-background">
         <div className="glow-orb orb-1" />
         <div className="glow-orb orb-2" />
@@ -323,7 +310,6 @@ return (
       </div>
 
       {showForgot ? (
-        /* ===== מסך חדש: איפוס סיסמה ===== */
         <div className="auth-card fade-up">
           <div className="auth-header">
             <button 
@@ -361,7 +347,6 @@ return (
           </form>
         </div>
       ) : (
-        /* ===== מסך מקורי: כניסה / הרשמה ===== */
         <div className={`auth-card ${isLogin ? 'login-mode' : 'signup-mode'}`}>
           <div className="auth-header">
             <div className="logo-container">

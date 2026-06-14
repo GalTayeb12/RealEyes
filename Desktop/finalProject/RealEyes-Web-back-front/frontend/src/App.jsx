@@ -16,16 +16,11 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* הגדרות העיצוב של ההודעות הקופצות */}
         <Toaster 
           position="top-center" 
-          // containerStyle={{
-          //   top: '45vh', /* 👈 השורה הזו דוחפת את ההודעות לאמצע המסך */
-          // }}
           toastOptions={{
-            // עיצוב התיבה הכללית שיתאים ל-CSS שלך
             style: {
-              background: '#1e293b', /* צבע הרקע של המודלים שלך */
+              background: '#1e293b',
               color: '#ffffff',
               border: '1px solid rgba(255,255,255,0.1)',
               backdropFilter: 'blur(10px)',
@@ -34,24 +29,21 @@ function App() {
               padding: '12px 24px',
               fontSize: '0.95rem',
             },
-            // צבעי אייקון ההצלחה
             success: {
               iconTheme: {
-                primary: '#10b981', /* הירוק של המערכת שלך */
+                primary: '#10b981',
                 secondary: '#ffffff',
               },
             },
-            // צבעי אייקון השגיאה
             error: {
               iconTheme: {
-                primary: '#ef4444', /* האדום של המערכת שלך */
+                primary: '#ef4444', 
                 secondary: '#ffffff',
               },
             },
-            // צבעי ספינר הטעינה
             loading: {
               iconTheme: {
-                primary: '#667eea', /* הסגול/כחול שלך */
+                primary: '#667eea', 
                 secondary: 'rgba(255,255,255,0.1)',
               },
             },

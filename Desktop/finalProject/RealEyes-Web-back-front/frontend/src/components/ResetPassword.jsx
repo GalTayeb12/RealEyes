@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Check, X, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api';
-import './Auth.css'; // משתמשים ב-CSS הקיים והמעולה שלך
+import './Auth.css'; 
 
 const ResetPassword = () => {
     const { token } = useParams();
@@ -43,7 +43,6 @@ const ResetPassword = () => {
 
     return (
         <div className="auth-container">
-            {/* הרקע עם ה-Orbs שכבר קיים לך ב-Auth.css */}
             <div className="auth-background">
                 <div className="glow-orb orb-1" />
                 <div className="glow-orb orb-2" />
@@ -78,7 +77,6 @@ const ResetPassword = () => {
                             </button>
                         </div>
 
-                        {/* תיבת דרישות סיסמה מעוצבת כמו ב-Profile */}
                         <div className="password-requirements" style={{ marginTop: '1rem' }}>
                             <p style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.5rem', color: 'rgba(255,255,255,0.8)' }}>
                                 Password requirements:
@@ -97,7 +95,6 @@ const ResetPassword = () => {
                         </div>
                     </div>
 
-                    {/* שדה אישור סיסמה */}
                     <div className="form-group">
                         <label>Confirm New Password</label>
                         <div className="input-wrapper">

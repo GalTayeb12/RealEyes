@@ -24,7 +24,6 @@ def safe_save(file_storage, upload_dir: str):
     return new_name, path
 
 def calculate_file_hash(file_storage):
-    """מחשב SHA-256 של הקובץ מבלי להעמיס את כולו לזיכרון"""
     sha256_hash = hashlib.sha256()
     for byte_block in iter(lambda: file_storage.read(4096), b""):
         sha256_hash.update(byte_block)
@@ -32,7 +31,6 @@ def calculate_file_hash(file_storage):
     return sha256_hash.hexdigest()
 
 def check_virustotal(file_hash, api_key):
-    """בדיקת הקובץ מול VirusTotal API V3"""
     if not api_key:
         return True, "No API key"
     url = f"https://www.virustotal.com/api/v3/files/{file_hash}"
@@ -50,7 +48,6 @@ def check_virustotal(file_hash, api_key):
         return True, "Connection Error"
 
 def get_image_metadata(file_path):
-    """חילוץ מטא-דאטה פורנזי עם המרת מיקום לשם עיר ומדינה"""
     metadata = {
         'Format': 'Missing',
         'Resizing': 'Unknown', 
@@ -67,7 +64,6 @@ def get_image_metadata(file_path):
         
         info = img._getexif()
         if info:
-            # 1. בדיקת שינוי גודל (Resizing)
             exif_w = info.get(40962) 
             exif_h = info.get(40963) 
             if exif_w and exif_h:
@@ -78,7 +74,6 @@ def get_image_metadata(file_path):
                         metadata['Resizing'] = 'Original'
                 except: pass
 
-            # 2. חילוץ וסינון שדות EXIF
             for tag, value in info.items():
                 decoded = TAGS.get(tag, tag)
                 
@@ -89,7 +84,6 @@ def get_image_metadata(file_path):
                 elif decoded == 'DateTimeOriginal' or decoded == 'DateTime':
                     metadata['Timestamp'] = str(value).strip()
                 
-                #  פיענוח מיקום גאוגרפי לעיר ומדינה
                 elif decoded == 'GPSInfo':
                     try:
                         lat = value.get(2)
@@ -98,7 +92,6 @@ def get_image_metadata(file_path):
                             lat_deg = float(lat[0] + lat[1]/60 + lat[2]/3600)
                             lon_deg = float(lon[0] + lon[1]/60 + lon[2]/3600)
                             
-                            # שליחה לשירות המפות להמרת קואורדינטות לכתובת
                             location_str = f"{lat_deg}, {lon_deg}"
                             try:
                                 location_data = geolocator.reverse(location_str, language='en').raw.get('address', {})
@@ -106,15 +99,13 @@ def get_image_metadata(file_path):
                                 country = location_data.get('country', 'Unknown Country')
                                 metadata['Location'] = f"{city}, {country}"
                             except:
-                                metadata['Location'] = location_str # חזרה לקואורדינטות אם השירות לא זמין
+                                metadata['Location'] = location_str
                     except:
                         metadata['Location'] = "Available"
         
-        # 3. בדיקת תוכנה נוספת מחוץ ל-EXIF
         if metadata['Software'] == 'Missing' and img.info.get('software'):
             metadata['Software'] = str(img.info['software'])
 
-        #  הפיכת גרסה מספרית לקידומת iOS מובנת
         soft = metadata['Software']
         model = metadata['Model']
         if soft != 'Missing':

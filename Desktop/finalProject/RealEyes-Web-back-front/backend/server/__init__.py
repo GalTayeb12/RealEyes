@@ -4,7 +4,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 from .config import Config
-# כאן הוספתי את mail לרשימת הייבוא
 from .extensions import db, migrate, jwt, mail 
 
 def create_app():
@@ -13,15 +12,12 @@ def create_app():
     flask_app = Flask(__name__)
     flask_app.config.from_object(Config)
 
-    # איתחול כל התוספים
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     jwt.init_app(flask_app)
     mail.init_app(flask_app) 
     
     os.makedirs(flask_app.config["UPLOAD_DIR"], exist_ok=True)
-
-    # ייבוא ורישום Blueprints
     from .routes.auth import auth_bp
     from .routes.upload import upload_bp
     from .routes.health import health_bp
@@ -34,7 +30,6 @@ def create_app():
     def health_check():
         return {"status": "ok"}
 
-    # הגדרת CORS בצורה מסודרת
     CORS(flask_app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://localhost:3000"]}})
 
     return flask_app

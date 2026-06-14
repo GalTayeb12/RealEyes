@@ -4,7 +4,6 @@ import cv2
 from PIL import Image
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
-
 def load_rgb_letterbox(image_path, size=(224, 224)):
     """
     Loads an image as RGB and resizes it with padding, without stretching.
@@ -96,9 +95,6 @@ def generate_efficientnet_heatmap(image_path, model, output_path):
 
         h = backbone_out
 
-        # In your model:
-        # Input -> EfficientNetB0 -> GAP -> Dropout -> Dense -> Dropout -> Dense -> Dropout -> Sigmoid
-        # So we continue from the layers after EfficientNetB0.
         for layer in model.layers[2:]:
             h = layer(h, training=False)
 

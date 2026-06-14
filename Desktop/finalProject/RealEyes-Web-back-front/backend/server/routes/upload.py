@@ -39,7 +39,6 @@ def upload_image():
         
         metadata = get_image_metadata(path)
         
-        # קריאה למודל 
         ai_result, ai_confidence = predict_image(path)
     else:
         new_name = "BLOCKED"
@@ -86,8 +85,6 @@ def get_history():
         for scan in scans:
             is_malicious = (scan.status == "blocked_malicious")
             
-            #  הוספת 3 שעות לזמן ישראל 
-            # בודקים שהתאריך קיים, מוסיפים 3 שעות, ואז מפרמטים לטקסט
             local_time = scan.created_at + timedelta(hours=3) if scan.created_at else None
             display_date = local_time.strftime("%d/%m/%Y %H:%M") if local_time else "N/A"
             

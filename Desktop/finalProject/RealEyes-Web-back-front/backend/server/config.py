@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-# הפקודה הזו קוראת את קובץ ה-.env (אם הוא קיים) וטוענת את המשתנים לזיכרון
 load_dotenv()
 
 class Config:

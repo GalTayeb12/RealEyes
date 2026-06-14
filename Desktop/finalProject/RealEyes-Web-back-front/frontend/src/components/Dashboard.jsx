@@ -48,12 +48,10 @@ const Dashboard = ({ setAuth }) => {
     setResult(null);
     setSelectedFile(file);
 
-    // תצוגה מקדימה של התמונה
     const reader = new FileReader();
     reader.onload = () => setPreview(reader.result);
     reader.readAsDataURL(file);
 
-    // הפעלת ההעלאה עם מעקב של Toast
     const uploadPromise = uploadToServer(file);
 
     toast.promise(uploadPromise, {
@@ -66,7 +64,6 @@ const Dashboard = ({ setAuth }) => {
       setIsUploading(true);
       await uploadPromise;
     } catch (err) {
-      // ניקוי במקרה של שגיאה
       setPreview(null);
       setSelectedFile(null);
       if (inputRef.current) inputRef.current.value = "";
@@ -101,7 +98,6 @@ const Dashboard = ({ setAuth }) => {
     try {
       setIsHeatmapLoading(true);
 
-      // אם כבר נוצר Heatmap קודם, לא צריך לבקש שוב מהשרת
       if (heatmapUrl) {
         setShowHeatmapModal(true);
         return;
@@ -126,12 +122,9 @@ const Dashboard = ({ setAuth }) => {
   return (
     <div className="dashboard">
 
-{/* כפתור המידע המרחף - מחוץ לריבוע העלאה */}
       <button className="info-floating-btn" onClick={() => setShowInfoModal(true)}>
         <Info size={24} />
       </button>
-
-      {/* חלון המידע (Modal) */}
       {showInfoModal && (
         <div className="info-overlay" onClick={() => setShowInfoModal(false)}>
           <div className="info-modal fade-up" onClick={(e) => e.stopPropagation()}>
@@ -239,7 +232,6 @@ const Dashboard = ({ setAuth }) => {
         </div>
       )}
 
-      {/* ===== TOP BAR ===== */}
       <header className="topbar">
         <div className="logo">
           <div className="logo-icon">
@@ -272,7 +264,6 @@ const Dashboard = ({ setAuth }) => {
         </div>
       </header>
 
-      {/* ===== MAIN ===== */}
       <main className="content">
         <h1 className="title">Deepfake Image Analysis</h1>
         <p className="subtitle">
@@ -291,12 +282,10 @@ const Dashboard = ({ setAuth }) => {
             setResult(null);
             setSelectedFile(file);
 
-            // תצוגה מקדימה של התמונה הנגררת
             const reader = new FileReader();
             reader.onload = () => setPreview(reader.result);
             reader.readAsDataURL(file);
 
-            // הפעלת ההעלאה לשרת
             const uploadPromise = uploadToServer(file);
 
             toast.promise(uploadPromise, {
@@ -318,7 +307,6 @@ const Dashboard = ({ setAuth }) => {
           }}
         >
 
-          {/* אזור תמונה */}
           <div className={`image-area ${result ? 'shrink' : ''}`}>    
             {!preview ? (
               <>
@@ -342,7 +330,6 @@ const Dashboard = ({ setAuth }) => {
             )}
           </div>
 
-        {/* אזור המתנה/ניתוח */}
           {preview && !result && isUploading && (
             <div className="analysis-loading">
                 <Loader2 className="spinner-icon" size={40} />
@@ -350,36 +337,9 @@ const Dashboard = ({ setAuth }) => {
             </div>
           )}
 
-          {/* תוצאות */}
-          {/* {result && (
-            <div className="results-container">
-                <div className={`result-box ${result.isFake ? 'fake' : 'real'}`}>
-                <h3>
-                    {result.isFake ? 'Fake Detected' : 'Image Appears Real'}
-                </h3>
-                <p>Confidence: {result.confidence}%</p>
-
-                <div className="result-actions">
-                    <button className="secondary-btn">Download Report</button>
-                    <button className="secondary-btn">View Heatmap</button>
-                </div>
-                
-                </div> */}
-
-                {/* כפתור העלאה מחדש - קטן ומתחת לתוצאות */}
-                {/* <button className="reupload-link" onClick={handleReset}>
-                    <Upload size={14} />
-                    Upload Another Image
-                </button>
-            </div> */}
-          {/* )} */}
-
-        {/* תוצאות */}
           {result && (
             <div className="results-container">
-                <div className={`result-box ${!result.isSafe ? 'fake' : (result.aiPrediction === 'FAKE' ? 'fake' : 'real')}`}>                    
-                
- {/* כותרת */}
+                <div className={`result-box ${!result.isSafe ? 'fake' : (result.aiPrediction === 'FAKE' ? 'fake' : 'real')}`}>                                    
                 {!result.isSafe ? (
                     <h3>Warning: Malicious File</h3>
                 ) : result.aiPrediction === 'ERROR' ? (
@@ -396,21 +356,19 @@ const Dashboard = ({ setAuth }) => {
                     </h3>
                 )}
                 
-                {/* אחוזי ביטחון מה-DB */}
                 <p className="confidence-text">
                     Confidence: {result.confidence === null ? 'N/A' : `${result.confidence}%`}
                 </p>
 
-                {/* סטטוס וירוס טוטאל בקטן */}
                 <p className="vt-status">
                     VT Status: {result.vtMessage} {result.isSafe}
                 </p>
                 {result.metadata && Object.keys(result.metadata).length > 0 && (
                   <div style={{ 
-                    marginTop: '1.2rem', /* הקטנו מעט את המרווח מלמעלה */
+                    marginTop: '1.2rem',
                     textAlign: 'left', 
                     background: 'rgba(15, 23, 42, 0.4)', 
-                    padding: '0.8rem 1.2rem 1.2rem', /* הקטנו פדינג עליון כדי שהכותרת תעלה */
+                    padding: '0.8rem 1.2rem 1.2rem', 
                     borderRadius: '12px', 
                     border: '1px solid rgba(255, 255, 255, 0.05)',
                     width: '100%',
@@ -420,7 +378,7 @@ const Dashboard = ({ setAuth }) => {
                       fontSize: '0.75rem', 
                       fontWeight: 'bold', 
                       color: '#a78bfa', 
-                      marginBottom: '0.6rem', /* הקטנו מרווח כדי שהתוכן יעלה */
+                      marginBottom: '0.6rem', 
                       textTransform: 'uppercase', 
                       textAlign: 'center', 
                       letterSpacing: '1px' 
@@ -432,8 +390,8 @@ const Dashboard = ({ setAuth }) => {
                       {Object.entries(result.metadata).map(([key, value]) => (
                         <div key={key} style={{ 
                           display: 'flex', 
-                          justifyContent: 'flex-start', /* 🟢 שינוי: הערך נצמד למפתח */
-                          gap: '8px',                   /* 🟢 רווח קבוע בין המפתח לערך */
+                          justifyContent: 'flex-start', 
+                          gap: '8px',                  
                           fontSize: '0.7rem', 
                           borderBottom: '1px solid rgba(255, 255, 255, 0.05)', 
                           padding: '4px 0' 
@@ -468,7 +426,6 @@ const Dashboard = ({ setAuth }) => {
                 </button>
             </div>
           )}
-
         </div>
       </main>
     </div>

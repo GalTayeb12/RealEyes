@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api';
-import './Auth.css'; // משתמשים באותו עיצוב כדי לשמור על קו אחיד
+import './Auth.css'; 
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -16,7 +16,6 @@ const ForgotPassword = () => {
         try {
             await api.post("/auth/forgot-password", { email });
             toast.success("If an account exists, a reset link has been sent to your email!");
-            // אחרי הצלחה, נחזיר אותו ללוגין תוך כמה שניות
             setTimeout(() => navigate('/login'), 3000);
         } catch (err) {
             toast.error(err.response?.data?.error || "Failed to send reset link");

@@ -14,7 +14,6 @@ const Profile = ({ setAuth, onBack }) => {
     confirmPassword: ''
   });
 
-  // ניהול שגיאות שדות ב-Live
   const [fieldErrors, setFieldErrors] = useState({
     currentPassword: '',
     confirmPassword: ''
@@ -22,7 +21,6 @@ const Profile = ({ setAuth, onBack }) => {
 
   const [uploadHistory, setUploadHistory] = useState([]);
 
-  // שליפת נתוני המשתמש
   const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { 
     email: 'user@example.com', 
     name: 'Unknown User', 
@@ -30,7 +28,6 @@ const Profile = ({ setAuth, onBack }) => {
     is_google_user: false 
   };
 
-  // בדיקת דרישות סיסמה חדשה (Checkmarks)
   const passReqs = {
     length: passwordData.newPassword.length >= 8,
     upper: /[A-Z]/.test(passwordData.newPassword),
@@ -41,7 +38,6 @@ const Profile = ({ setAuth, onBack }) => {
 
   const isPasswordStrong = Object.values(passReqs).every(Boolean);
 
-  // --- פונקציית בדיקת סיסמה נוכחית בלייב ---
   const verifyCurrentPasswordLive = async (val) => {
     if (!val) {
       setFieldErrors(prev => ({ ...prev, currentPassword: '' }));
@@ -49,7 +45,6 @@ const Profile = ({ setAuth, onBack }) => {
     }
 
     try {
-      // שליחת בדיקה מהירה לשרת (verify-password)
       const res = await api.post("/auth/verify-password", { password: val });
       if (!res.data.valid) {
         setFieldErrors(prev => ({ ...prev, currentPassword: 'Incorrect password' }));
@@ -57,17 +52,14 @@ const Profile = ({ setAuth, onBack }) => {
         setFieldErrors(prev => ({ ...prev, currentPassword: '' }));
       }
     } catch (err) {
-      // במקרה של שגיאת תקשורת לא נפריע למשתמש להקליד
       console.error("Live verification error");
     }
   };
 
-  // עידכון שדות וביצוע בדיקות בלייב
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setPasswordData(prev => ({ ...prev, [name]: value }));
 
-    // אם זה שדה הסיסמה הנוכחית - נבדוק מול השרת מיד
     if (name === 'currentPassword') {
       verifyCurrentPasswordLive(value);
     }
