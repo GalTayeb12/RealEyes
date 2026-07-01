@@ -63,17 +63,17 @@ The following figure illustrates the complete RealEyes forensic pipeline, from i
 
 ## Model Architectures
 
-RealEyes evaluates and compares several complementary deep learning architectures.
+RealEyes includes two complementary model tracks: an applied detection model used by the system, and a research evaluation track focused on cross-dataset generalization.
 
-| Model | Purpose |
-|--------|---------|
-| CNN-SRM | Low-level forensic artifact detection |
-| EfficientNetB0 | Semantic and texture analysis |
-| ViT-Tiny | Vision Transformer baseline |
-| Ensemble | Combines multiple model predictions |
+| Model | Role in Project | Purpose |
+|--------|----------------|---------|
+| CNN-SRM | Applied model + research baseline | Detects low-level forensic artifacts, noise inconsistencies, and manipulation traces |
+| EfficientNetB0 | Applied model + research baseline | Learns semantic, texture, and visual manipulation patterns |
+| Two-Stream Model | Applied model / ensemble component | Combines RGB-based visual features with forensic SRM-based features |
+| Weighted Ensemble | Final applied model concept | Combines multiple model outputs into a stronger Real/Fake prediction |
+| ViT-Tiny | Research track | Used for cross-dataset generalization experiments and comparison against CNN-based models |
 
-Each architecture was evaluated independently and compared using identical experimental settings.
-
+The applied system focuses on combining complementary forensic and visual evidence, while the research track evaluates how well different architectures generalize across unseen datasets.
 ---
 
 ## Datasets
@@ -95,7 +95,7 @@ The datasets were selected to evaluate **cross-dataset generalization**, one of 
 
 RealEyes was evaluated on more than **400,000 images** collected from four public datasets.
 
-The evaluation focused on cross-dataset generalization by comparing four complementary deep learning architectures.
+The evaluation included both the applied ensemble-based detection system and a separate cross-dataset research study comparing CNN-SRM, EfficientNetB0, and ViT-Tiny.
 
 Key evaluation metrics included:
 
