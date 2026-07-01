@@ -235,7 +235,14 @@ For academic use, please cite the accompanying paper.
 
 ---
 
+---
+
 ## License
 
-This project is released under the MIT License.
-See the `LICENSE` file for more information.
+This project is released under the **RealEyes License**.
+
+The repository is publicly available for educational, academic, research, and portfolio evaluation purposes only.
+
+Commercial use, redistribution, and reuse of substantial portions of the source code are prohibited without prior written permission from the authors.
+
+See the `LICENSE` file for full details.
