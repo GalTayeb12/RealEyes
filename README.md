@@ -1,4 +1,6 @@
-<div align="center">
+<p align="center">
+  <img src="assets/banner.png" alt="RealEyes Banner" width="100%">
+</p>
 
 # 👁️ RealEyes
 
