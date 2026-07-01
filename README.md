@@ -137,7 +137,7 @@ For every uploaded image, the system provides:
 
 The following demonstration showcases the complete RealEyes workflow, including image upload, security validation, prediction, confidence score, and Grad-CAM visualization.
 
-![RealEyes Demo](assets/demo.mp4)
+![RealEyes Demo](assets/demo1.gif)
 
 ---
 
